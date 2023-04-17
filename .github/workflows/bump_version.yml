@@ -6,7 +6,9 @@ on:
       repository:
         required: true
         type: string
-  
+      token:
+        required: true
+        type: string
 jobs:
   bump_version:
     runs-on: ubuntu-latest
@@ -15,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: ${{ inputs.repository }}
-          token: ${{ secrets.WORKFLOW_GIT_ACCESS_TOKEN }}
+          token: ${{ inputs.token }}
       - name: bump version number
         env:
           ref: ${{ github.ref_name }}
