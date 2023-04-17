@@ -6,7 +6,6 @@ on:
       repository:
         required: true
         type: string
-      branch:
     secrets:
       WORKFLOW_GIT_ACCESS_TOKEN:
         required: true
