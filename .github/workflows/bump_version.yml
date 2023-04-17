@@ -24,7 +24,7 @@ jobs:
         run: |
           old_v=$(cat pubspec.yaml | grep -o 'version:[^:]*' | cut -f2 -d":" | xargs)
           echo "old_version=$old_v" >> $GITHUB_ENV
-          echo "gitMessage=$(git log -1)" >> $GITHUB_ENV
+          echo "gitMessage=$(git log -1 --oneline)" >> $GITHUB_ENV
           
           perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/($1).($2+1)/e' pubspec.yaml
           
