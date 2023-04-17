@@ -34,8 +34,7 @@ jobs:
           elif [[ -z $feature ]]; then
             perl -i -pe 's/^(version:\s+\d+\.)(\d+)(\.\d+\+\d+)$/($1).($2+1).($3)/e' pubspec.yaml
           else
-            echo "::error:: commit is not feature or fix"
-            exit 1
+            echo "commit is not feature or fix"
           fi
           
           version=$(cat pubspec.yaml | grep -o 'version:[^:]*' | cut -f2 -d":" | xargs)
