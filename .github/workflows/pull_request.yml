@@ -27,9 +27,11 @@ jobs:
           if [[ $ref == 'dev' ]]; then
             lenPrs=$(gh pr list -B homolog -H dev --json id,title --jq '. | length')
             echo "lenPrs=$lenPrs" >> "$GITHUB_OUTPUT"
-          else
+          elif [[ $ref == 'homolog' ]]; then
             lenPrs=$(gh pr list -B prod -H homolog --json id,title --jq '. | length')
             echo "lenPrs=$lenPrs" >> "$GITHUB_OUTPUT"
+          else
+            echo "not implemented yet"
           fi
           
   create-pr-homolog:
