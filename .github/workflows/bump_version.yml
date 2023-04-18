@@ -21,12 +21,13 @@ jobs:
       - name: bump version number
         env:
           ref: ${{ github.ref_name }}
+          repository: ${{ inputs.repository }}
         run: |
           
           old_v=$(cat pubspec.yaml | grep -o 'version:[^:]*' | cut -f2 -d":" | xargs)
           echo "old_version=$old_v" >> $GITHUB_ENV
           
-          url="https://raw.githubusercontent.com/$1"
+          url="https://raw.githubusercontent.com/$repository"
           prod=$(curl "$url/prod/pubspec.yaml" | grep -o 'version:[^:]*' | cut -f2 -d"+")
           homolog=$(curl "$url/homolog/pubspec.yaml" | grep -o 'version:[^:]*' | cut -f2 -d"+")
           dev=$(curl "$url/dev/pubspec.yaml" | grep -o 'version:[^:]*' | cut -f2 -d"+")
