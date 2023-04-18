@@ -33,7 +33,7 @@ jobs:
           arr=($prod $homolog $dev)
           versionCode=( $( for x in ${arr[@]}; do echo $x; done | sort -n | tail -1) )
           
-          perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/($1).('$versionCode')/e' pubspec.yaml
+          perl -i -pe 's/^(version:\s+\d+\.\d+\.\d+\+)(\d+)$/($1).('$versionCode+1')/e' pubspec.yaml
           
           echo "feature=$(git log -1 --oneline | grep "feature/")" >> $GITHUB_ENV
           echo "fix=$(git log -1 --oneline | grep "fix/")" >> $GITHUB_ENV
