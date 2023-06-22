@@ -1,9 +1,7 @@
 name: React.js CI / Next.js CI
 
 on:
-  push:
-    branches: [prod, dev, homolog]
-  pull_request:
+  workflow_call:
 jobs:
   next_js_ci:
     name: Run Next.js / React.js CI
@@ -25,6 +23,9 @@ jobs:
 
       - name: Lint with ESLint and Prettier
         run: yarn lint
+      
+      - name: Build Next.js app
+        run: yarn build
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
