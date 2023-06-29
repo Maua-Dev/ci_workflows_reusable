@@ -3,10 +3,10 @@ name: Github App
 on:
   workflow_call:
     secrets:
-        app_id:
-          required: true
-        private_key:
-          required: true
+      SETUP_APP_ID:
+        required: true
+      SETUP_APP_PRIVATE_KEY:
+        required: true
 jobs:
   next_js_ci:
     name: Run Next.js / React.js CI
@@ -21,7 +21,7 @@ jobs:
           echo $token
           echo "token=$token" >> $GITHUB_OUTPUT
         env:
-            APP_ID: ${{ secrets.app_id }}
-            APP_PRIVATE_KEY: ${{ secrets.private_key }}
+            APP_ID: ${{ secrets.SETUP_APP_ID }}
+            APP_PRIVATE_KEY: ${{ secrets.SETUP_APP_PRIVATE_KEY }}
       
       
