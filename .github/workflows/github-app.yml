@@ -12,13 +12,15 @@ jobs:
     name: github-app
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: get jwt
         run: |
           token=$(./lib/github-app-token.sh)
           echo $token
           echo "token=$token" >> $GITHUB_OUTPUT
         env:
-            APP_ID: ${{ secrets.SETUP_APP_ID }}
-            APP_PRIVATE_KEY: ${{ secrets.SETUP_APP_PRIVATE_KEY }}
+          APP_ID: ${{ secrets.SETUP_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.SETUP_APP_PRIVATE_KEY }}
       
       
