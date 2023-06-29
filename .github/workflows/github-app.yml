@@ -8,13 +8,10 @@ on:
       SETUP_APP_PRIVATE_KEY:
         required: true
 jobs:
-  next_js_ci:
-    name: Run Next.js / React.js CI
+  github-app:
+    name: github-app
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: get jwt
         run: |
           token=$(./lib/github-app-token.sh)
