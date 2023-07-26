@@ -6,6 +6,10 @@ on:
       repository:
         required: true
         type: string
+      versionCode:
+        required: true
+        description: 'GitHub run number'
+        type: number
     secrets:
       WORKFLOW_GIT_ACCESS_TOKEN:
         required: true
@@ -23,30 +27,13 @@ jobs:
           ref: ${{ github.ref_name }}
           repository: ${{ inputs.repository }}
         run: |
-          # Lê a versão atual do package.json
+
           current_version=$(perl -ne 'print "$1" if /"version":\s*"(.*?)"/' package.json)
-          current_version_code=$(perl -ne 'print "$1" if /"versionCode":\s*(\d+)/' package.json)
+          current_version_code=${{ inputs.versionCode }}
+          ((current_version_code++))
+          perl -i -pe 's/"versionCode":\s*'$(($current_version_code-1))'/"versionCode": '$current_version_code'/' package.json
 
-          # Incrementa o patch da versão
-          if [[ $current_version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
-              major="${BASH_REMATCH[1]}"
-              minor="${BASH_REMATCH[2]}"
-              patch="${BASH_REMATCH[3]}"
-              ((patch++))
-              new_version="$major.$minor.$patch"
-
-              # Incrementa o version code
-              ((current_version_code++))
-
-              # Atualiza o package.json com a nova versão e código da versão usando o comando Perl
-              perl -i -pe 's/"version":\s*"'$current_version'"/"version": "'$new_version'"/' package.json
-              perl -i -pe 's/"versionCode":\s*'$(($current_version_code-1))'/"versionCode": '$current_version_code'/' package.json
-
-              echo "Versão atualizada para $new_version (código $current_version_code)"
-          else
-              echo "Formato de versão inválido no package.json: $current_version"
-              exit 1
-          fi
+          echo "Versão atualizada para $new_version (código $current_version_code)"
 
       - name: GIT commit and push all changed files
         env:
