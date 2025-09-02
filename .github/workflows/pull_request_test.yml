@@ -7,37 +7,9 @@ on:
         required: true
         type: string
     
-jobs: 
-  check_pr:
-    runs-on: ubuntu-latest
-    outputs:
-      lenPrs: ${{ steps.check_pr.outputs.lenPrs }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ inputs.repository }}
-          
-      - id: check_pr
-        name: Check PR list
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          ref: ${{ github.ref_name }}
-        run: |
-          if [[ $ref == 'dev' ]]; then
-            lenPrs=$(gh pr list -B homolog -H dev --json id,title --jq '. | length')
-            echo "lenPrs=$lenPrs" >> "$GITHUB_OUTPUT"
-          elif [[ $ref == 'homolog' ]]; then
-            lenPrs=$(gh pr list -B prod -H homolog --json id,title --jq '. | length')
-            echo "lenPrs=$lenPrs" >> "$GITHUB_OUTPUT"
-          else
-            echo "not implemented yet"
-          fi
-          
+jobs:
   create-pr-homolog:
-    needs: check_pr
     runs-on: ubuntu-latest
-    if: ${{ github.ref_name == 'dev' && needs.check_pr.outputs.lenPrs == 0 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -54,8 +26,6 @@ jobs:
             gh pr create -B homolog -H dev --title "Merge branch dev -> homolog - Criado Automatico" --body "Criado Automaticamente" --reviewer "$reviewers"
         
   create-pr-prod:
-    needs: check_pr
-    if: ${{ github.ref_name == 'homolog' && needs.check_pr.outputs.lenPrs == 0 }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
