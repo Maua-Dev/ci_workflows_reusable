@@ -22,7 +22,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
             echo $reviewers
-            gh pr create -B homolog -H dev --title "Merge branch dev -> homolog - Criado Automatico" --body "Criado Automaticamente" --reviewer Matelz,JoaoVitorBranco
+            gh pr create -B homolog -H dev --title "Merge branch dev -> homolog - Criado Automatico" --body "Criado Automaticamente" --reviewer Matelz,JoaoVitorBranco,enzosakamoto
         
   create-pr-prod:
     runs-on: ubuntu-latest
@@ -38,4 +38,4 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
             echo $reviewers
-            gh pr create -B prod -H homolog --title "Merge branch homolog -> prod - Criado Automatico" --body "Criado Automaticamente" --reviewer Matelz,JoaoVitorBranco
+            gh pr create -B prod -H homolog --title "Merge branch homolog -> prod - Criado Automatico" --body "Criado Automaticamente" --reviewer Matelz,JoaoVitorBranco,enzosakamoto
