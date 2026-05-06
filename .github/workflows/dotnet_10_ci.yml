@@ -1,0 +1,69 @@
+name: CI .NET 10
+
+on:
+  workflow_call:
+    inputs:
+      project-path:
+        description: "Caminho para .sln ou .csproj (opcional)"
+        required: false
+        default: ""
+        type: string
+      test-command:
+        description: "Comando de teste customizado (opcional)"
+        required: false
+        default: ""
+        type: string
+      dotnet-version:
+        description: "Versao do SDK .NET"
+        required: false
+        default: "10.0.x"
+        type: string
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
+
+      - name: Resolve target
+        id: resolve_target
+        env:
+          PROJECT_PATH: ${{ inputs.project-path }}
+        run: |
+          if [ -n "$PROJECT_PATH" ]; then
+            target="$PROJECT_PATH"
+          else
+            target="$(ls *.sln 2>/dev/null | head -n 1)"
+            if [ -z "$target" ]; then
+              target="$(ls *.csproj 2>/dev/null | head -n 1)"
+            fi
+          fi
+
+          if [ -z "$target" ]; then
+            echo "Nenhum .sln ou .csproj encontrado na raiz. Passe project-path." && exit 1
+          fi
+
+          echo "target=$target" >> "$GITHUB_OUTPUT"
+
+      - name: Restore
+        run: dotnet restore "${{ steps.resolve_target.outputs.target }}"
+
+      - name: Build
+        run: dotnet build "${{ steps.resolve_target.outputs.target }}" --configuration Release --no-restore
+
+      - name: Test
+        env:
+          TEST_COMMAND: ${{ inputs.test-command }}
+        run: |
+          if [ -n "$TEST_COMMAND" ]; then
+            eval "$TEST_COMMAND"
+          else
+            dotnet test "${{ steps.resolve_target.outputs.target }}" --configuration Release --no-build --verbosity normal
+          fi
